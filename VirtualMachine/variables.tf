@@ -1,6 +1,6 @@
 # Variables
 variable "location" {
-  default = "france_central"
+  default = "francecentral"
 }
 
 variable "prefix" {
