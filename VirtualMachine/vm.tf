@@ -124,7 +124,8 @@ resource "azurerm_virtual_machine" "Ubuntu" {
   name                  = "Ubuntu"
   location              = var.location
   resource_group_name   = azurerm_resource_group.rg1.name
-  network_interface_ids = azurerm_network_interface.nic.id
+  network_interface_ids = [azurerm_network_interface.nic.id]
+  # network_interface_ids = ["${azurerm_network_interface.nic.*.id}"]
   vm_size               = var.vmsize
   storage_os_disk {
     name              = "myOsDisk"
