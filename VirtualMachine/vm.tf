@@ -37,8 +37,8 @@ resource "azurerm_virtual_network" "vnet1" {
   }
 }
 # Create subnet
-resource "azurerm_subnet" "myterraformsubnet" {
-  name                 = "mySubnet"
+resource "azurerm_subnet" "mysubnet" {
+  name                 = "mysubnet"
   resource_group_name  = azurerm_resource_group.rg1.name
   virtual_network_name = azurerm_virtual_network.vnet1.name
   address_prefixes     = ["10.0.1.0/24"]
@@ -84,7 +84,7 @@ resource "azurerm_network_interface" "nic" {
   resource_group_name = azurerm_resource_group.rg1.name
   ip_configuration {
     name                          = "${var.prefix}_nic1"
-    subnet_id                     = azurerm_subnet.myterraformsubnet.id
+    subnet_id                     = azurerm_subnet.mysubnet.id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.msapip1.id
   }
@@ -154,6 +154,16 @@ resource "azurerm_virtual_machine" "ubuntuvm" {
     enabled     = "true"
     storage_uri = azurerm_storage_account.mystorageaccount.primary_blob_endpoint
   }
+
+  depends_on = [
+    azurerm_network_interface.nic,
+    azurerm_network_security_group.nsg,
+    azurerm_public_ip.msapip1,
+    azurerm_resource_group.rg1,
+    azurerm_storage_account.mystorageaccount,
+    azurerm_subnet.mysubnet,
+    azurerm_virtual_network.vnet1
+  ]
   tags = {
     environment = "Dev/Test"
     provisioner = "Terraform"
