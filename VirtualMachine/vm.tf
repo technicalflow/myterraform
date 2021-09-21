@@ -50,7 +50,7 @@ resource "azurerm_public_ip" "msapip1" {
   resource_group_name = azurerm_resource_group.rg1.name
   allocation_method   = "Dynamic"
   sku = "Basic"
-  domain_name_label =   "${azurerm_public_ip.msapip1.name}_dnsname"
+  domain_name_label =   "${azurerm_resource_group.rg1.name}_dns
   tags = {
     environment = "Dev/Test"
     provisioner = "Terraform"
