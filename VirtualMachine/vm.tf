@@ -120,8 +120,8 @@ resource "azurerm_storage_account" "mystorageaccount" {
   }
 }
 # Create virtual machine
-resource "azurerm_virtual_machine" "Ubuntu" {
-  name                  = "Ubuntu"
+resource "azurerm_virtual_machine" "ubuntu" {
+  name                  = "${var.prefix}_ubuntu"
   location              = var.location
   resource_group_name   = azurerm_resource_group.rg1.name
   network_interface_ids = [azurerm_network_interface.nic.id]
@@ -140,7 +140,7 @@ resource "azurerm_virtual_machine" "Ubuntu" {
     version   = "latest"
   }
   os_profile {
-    computer_name  = "Ubuntu"
+    computer_name  = "ubuntu"
     admin_username = "ncadmin"
   }
   os_profile_linux_config {
