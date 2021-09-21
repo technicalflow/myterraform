@@ -10,10 +10,10 @@ provider "azurerm" {
   features {
 
   }
-    # subscription_id = "xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-    # # client_id = "xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-    # # client_secret = "xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-    # tenant_id = "xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  # subscription_id = "xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  # # client_id = "xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  # # client_secret = "xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  # tenant_id = "xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 }
 
 # Create a resource group if it doesn’t exist
@@ -49,8 +49,8 @@ resource "azurerm_public_ip" "msapip1" {
   location            = var.location
   resource_group_name = azurerm_resource_group.rg1.name
   allocation_method   = "Dynamic"
-  sku = "Basic"
-  domain_name_label =   "${azurerm_resource_group.rg1.name}_dns"
+  sku                 = "Basic"
+  domain_name_label   = var.dnsname
   tags = {
     environment = "Dev/Test"
     provisioner = "Terraform"
@@ -79,9 +79,9 @@ resource "azurerm_network_security_group" "nsg" {
 }
 # Create network interface
 resource "azurerm_network_interface" "nic" {
-  name                      = "${var.prefix}_nic1"
-  location                  = var.location
-  resource_group_name       = azurerm_resource_group.rg1.name
+  name                = "${var.prefix}_nic1"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.rg1.name
   ip_configuration {
     name                          = "${var.prefix}_nic1"
     subnet_id                     = azurerm_subnet.myterraformsubnet.id
