@@ -120,15 +120,15 @@ resource "azurerm_storage_account" "mystorageaccount" {
   }
 }
 # Create virtual machine
-resource "azurerm_virtual_machine" "ubuntu" {
+resource "azurerm_virtual_machine" "ubuntuvm" {
   name                  = "${var.prefix}_ubuntu"
   location              = var.location
   resource_group_name   = azurerm_resource_group.rg1.name
   network_interface_ids = [azurerm_network_interface.nic.id]
   # network_interface_ids = ["${azurerm_network_interface.nic.*.id}"]
-  vm_size               = var.vmsize
+  vm_size = var.vmsize
   storage_os_disk {
-    name              = "myOsDisk"
+    name              = "ubuntuOsDisk"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Premium_LRS"
