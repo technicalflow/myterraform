@@ -4,3 +4,7 @@ output "PIP" {
 output "DNS" {
   value = azurerm_public_ip.msapip1.domain_name_label
 }
+
+output "FQDN" {
+  value = azurerm_public_ip.msapip1.fqdn
+}

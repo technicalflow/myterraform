@@ -49,6 +49,7 @@ resource "azurerm_public_ip" "msapip1" {
   location            = var.location
   resource_group_name = azurerm_resource_group.rg1.name
   allocation_method   = "Dynamic"
+  sku = "Basic"
   domain_name_label =   "${azurerm_public_ip.msapip1.name}_dnsname"
   tags = {
     environment = "Dev/Test"
