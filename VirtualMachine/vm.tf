@@ -191,8 +191,8 @@ resource "azurerm_virtual_machine" "ubuntuvm" {
       type        = "ssh"
       user        = "ncadmin"
       port        = 22
-      # private_key = file("./sshkey")
-      private_key = var.sshkey
+      private_key = file("./sshkey")
+      #private_key = var.sshkey
       host        = azurerm_public_ip.msapip1.fqdn
     }
   }
