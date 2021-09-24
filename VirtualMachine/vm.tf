@@ -73,7 +73,13 @@ resource "azurerm_network_security_group" "nsg" {
     source_address_prefix      = "95.108.30.54/32"
     destination_address_prefix = "*"
   }
-  security_rule {
+  tags = {
+    environment = "Dev/Test"
+    provisioner = "Terraform"
+  }
+}
+
+resource "azurerm_network_security_rule" "allow_web" {
     name                   = "Web"
     priority               = 1002
     direction              = "Inbound"
@@ -83,11 +89,8 @@ resource "azurerm_network_security_group" "nsg" {
     destination_port_range = "80"
     #    source_address_prefix      = "95.108.30.54/32"
     destination_address_prefix = "*"
-  }
-  tags = {
-    environment = "Dev/Test"
-    provisioner = "Terraform"
-  }
+    resource_group_name = azurerm_resource_group.rg1.name
+    network_security_group_name = azurerm_virtual_network.vnet1.name
 }
 # Create network interface
 resource "azurerm_network_interface" "nic" {
