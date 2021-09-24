@@ -28,3 +28,6 @@
 *.swp
 tmp
 /.vs
+
+# ssh keys #
+sshkey

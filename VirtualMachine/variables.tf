@@ -14,3 +14,7 @@ variable "vmsize" {
 variable "dnsname" {
   default = "msafs-tf-ubuntu"
 }
+
+variable "sshkey" {
+  
+}
