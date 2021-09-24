@@ -1,2 +1,30 @@
+# #####
+# TERRAFORM LIFECYCLE MANAGED
+# All changes will be overwritten
+#####
+# git #
+!.gitkeep
+!.gitignore
+
+# macos #
+*.db
+._*
+.DS_*
+.Spotlight*
+.Trashes*
+
+# tf #
+*.tfvars*
+!*.auto.tfvars*
+*.tfstate*
 .terraform*
 .terraform.lock.hcl
+
+# tmp #
+*.*~
+*.lock
+*.log
+*.pid
+*.swp
+tmp
+/.vs
