@@ -155,6 +155,13 @@ resource "azurerm_virtual_machine" "ubuntuvm" {
     storage_uri = azurerm_storage_account.mystorageaccount.primary_blob_endpoint
   }
 
+  provisioner "remote-exec" {
+    inline = [
+      "sudo apt update && sudo apt upgrade -y",
+      "sudo apt install nginx -y && sudo service nginx start"
+    ]
+  }
+
   depends_on = [
     azurerm_network_interface.nic,
     azurerm_network_security_group.nsg,
