@@ -1,14 +1,3 @@
-provider "azurerm" {
-  #version = "=1.36.0"
-  features {
-    
-  }
-}
-
-resource "azurerm_resource_group" "default" {
-  name     = "${var.name}-${var.environment}-rg"
-  location = var.location
-}
 
 resource "azurerm_app_service_plan" "default" {
   name                = "${var.name}-plan"
@@ -34,16 +23,5 @@ resource "azurerm_app_service" "default" {
   site_config {
     always_on        = true
     linux_fx_version = "DOCKER|nginxdemos/hello"
-  }
-
-#   site_config {
-#     always_on        = true
-#     java_version           = "1.8"
-#     java_container         = "tomcat"
-#     java_container_version = "9.0"
-#   }
-
-  identity {
-    type = "SystemAssigned"
   }
 }
