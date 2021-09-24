@@ -4,7 +4,7 @@ variable "location" {
 }
 
 variable "prefix" {
-  default = "msafs_tf_"
+  default = "msafs_tf"
 }
 
 variable "vmsize" {

@@ -97,8 +97,7 @@ resource "azurerm_network_security_rule" "allow_web" {
   network_security_group_name = azurerm_virtual_network.vnet1.name
   depends_on = [
     azurerm_resource_group.rg1,
-    azurerm_virtual_network.vnet1,
-    azurerm_subnet.mysubnet
+    azurerm_network_security_group.nsg
   ]
 }
 # Create network interface
@@ -125,6 +124,10 @@ resource "azurerm_network_interface" "nic" {
 resource "azurerm_network_interface_security_group_association" "nicnsg" {
   network_interface_id      = azurerm_network_interface.nic.id
   network_security_group_id = azurerm_network_security_group.nsg.id
+  depends_on = [
+    azurerm_network_interface.nic,
+    azurerm_network_security_group.nsg
+  ]
 }
 
 # Generate random text for a unique storage account name
