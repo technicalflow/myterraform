@@ -4,7 +4,7 @@ variable "location" {
 }
 
 variable "prefix" {
-  default = "msafs"
+  default = "msafs_tf"
 }
 
 variable "vmsize" {
@@ -12,5 +12,5 @@ variable "vmsize" {
 }
 
 variable "dnsname" {
-  default = "msafs-ubuntu"
+  default = "msafs-tf-ubuntu"
 }

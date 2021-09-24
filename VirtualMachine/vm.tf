@@ -19,7 +19,7 @@ provider "azurerm" {
 
 # Create a resource group if it doesn’t exist
 resource "azurerm_resource_group" "rg1" {
-  name     = "${var.prefix}_iac_tf"
+  name     = "${var.prefix}_rg1"
   location = var.location
   tags = {
     environment = "Dev/Test"
@@ -94,7 +94,7 @@ resource "azurerm_network_security_rule" "allow_web" {
   source_address_prefix       = "*"
   destination_address_prefix  = "*"
   resource_group_name         = azurerm_resource_group.rg1.name
-  network_security_group_name = azurerm_virtual_network.vnet1.name
+  network_security_group_name = azurerm_network_security_group.nsg.name
 }
 # Create network interface
 resource "azurerm_network_interface" "nic" {
@@ -191,7 +191,7 @@ resource "azurerm_virtual_machine" "ubuntuvm" {
       type = "ssh"
       user = "ncadmin"
       private_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCvimFW5zoaSKnDrXzKUXB7bB/8\r\n410E4lR1wihgE3fLCGXwMDu8QxiGjIVWguptEBefI6urGikbXGLHCVvIFHFPai/5\r\nj3ekzLKMDYIHUC504fl1Gf4c+t9Petc4XvKjqELXfuQ3Jy2huaMr0o1CoKmckBLQ\r\neoqlTMjBFvHxeO5dR3OBLnvyRFsV5qrD4x8T0dmyE2NbBzqCcTSg3FnEIg28ZlX+\r\nVjkHyY90xq0vu/C/80YaC0RSryF2/i5r1faTOQQuILKtVlFpsAxqsIfDGN+A6IfQ\r\n6kqVqZicPTLan2saDIqph3g8iRPs3erell/xaUpvZjPYRTlpL0XNfR9hgVZT7Gvx\r\nQzAN/GotzvAzwp5OqoPCOTGHYHpg9bVSJW6XBXBg54j6Aowrxg3dVhv2n9mhwGJv\r\nnoBNLEKhyvRqi0N0Dgmb+kC0p6KJjj2D7nDcxO2dDqp40YFkMCIBl/MntJ6tnr4q\r\nGfZOpnqVEiYQYUpmRuzpPDlsuMOFJnp3pTLWPF0= generated-by-azure\r\n"
-      host = azurerm_public_ip.msapip1.ip_address
+      host = azurerm_public_ip.msapip1.fqdn
     }
   }
 
