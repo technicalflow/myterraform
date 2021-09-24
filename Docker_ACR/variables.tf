@@ -1,7 +1,7 @@
 variable "name" {
   type        = string
   description = "Location of the azure resource group."
-  default     = "demo-tfquickstart"
+  default     = "msafs-tf"
 }
 
 variable "environment" {
@@ -13,7 +13,7 @@ variable "environment" {
 variable "location" {
   type        = string
   description = "Location to deploy the resoruce group"
-  default     = "West US 2"
+  default     = "France Central"
 }
 
 variable "dns_prefix" {

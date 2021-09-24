@@ -17,17 +17,14 @@ provider "azurerm" {
 data "azurerm_subscription" "current" {}
 
 resource "random_string" "rgname" {
- length  = 1
- special = false
- upper   = false
- lower = false
- number  = true
+  length  = 1
+  special = false
+  upper   = false
+  lower   = false
+  number  = true
 }
 resource "azurerm_resource_group" "default" {
-  name     = "${var.name}-${var.environment}-rg${random_string.rgname}"
+  name     = "${var.name}-${var.environment}-rg${random_string.rgname.number}"
   location = var.location
-  depends_on = [
-    random_string.rgname
-  ]
 }
 
