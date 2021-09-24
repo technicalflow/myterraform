@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     azurerm = {
-      source = "hashicorp/azurerm"
+      source  = "hashicorp/azurerm"
       version = "~>2.0"
     }
   }
@@ -62,6 +62,10 @@ resource "azurerm_network_security_group" "nsg" {
   name                = "${var.prefix}_nsg1"
   location            = var.location
   resource_group_name = azurerm_resource_group.rg1.name
+  depends_on = [
+    azurerm_virtual_network.vnet1,
+    azurerm_subnet.mysubnet
+  ]
   security_rule {
     name                       = "SSH"
     priority                   = 1001
@@ -80,17 +84,22 @@ resource "azurerm_network_security_group" "nsg" {
 }
 
 resource "azurerm_network_security_rule" "allow_web" {
-    name                   = "Web"
-    priority               = 1002
-    direction              = "Inbound"
-    access                 = "Allow"
-    protocol               = "Tcp"
-    source_port_range      = "*"
-    destination_port_range = "80"
-    #    source_address_prefix      = "95.108.30.54/32"
-    destination_address_prefix = "*"
-    resource_group_name = azurerm_resource_group.rg1.name
-    network_security_group_name = azurerm_virtual_network.vnet1.name
+  name                        = "Web"
+  priority                    = 1002
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "80"
+  source_address_prefix       = "*"
+  destination_address_prefix  = "*"
+  resource_group_name         = azurerm_resource_group.rg1.name
+  network_security_group_name = azurerm_virtual_network.vnet1.name
+  depends_on = [
+    azurerm_resource_group.rg1,
+    azurerm_virtual_network.vnet1,
+    azurerm_subnet.mysubnet
+  ]
 }
 # Create network interface
 resource "azurerm_network_interface" "nic" {
@@ -107,6 +116,10 @@ resource "azurerm_network_interface" "nic" {
     environment = "Dev/Test"
     provisioner = "Terraform"
   }
+  depends_on = [
+    azurerm_network_security_group.nsg,
+    azurerm_virtual_network.vnet1
+  ]
 }
 
 resource "azurerm_network_interface_security_group_association" "nicnsg" {
@@ -184,7 +197,8 @@ resource "azurerm_virtual_machine" "ubuntuvm" {
     azurerm_resource_group.rg1,
     azurerm_storage_account.mystorageaccount,
     azurerm_subnet.mysubnet,
-    azurerm_virtual_network.vnet1
+    azurerm_virtual_network.vnet1,
+    azurerm_network_security_group.nsg
   ]
   tags = {
     environment = "Dev/Test"
