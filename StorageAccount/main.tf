@@ -1,7 +1,8 @@
 terraform {
   required_providers {
     azurerm = {
-      #      version = "2.29.0"
+      source  = "hashicorp/azurerm"
+      version = "~>2.80"
     }
   }
 }
@@ -11,23 +12,51 @@ provider "azurerm" {
 
   }
 }
-data "azurerm_resource_group" "deploymentRG" {
-  name = "msafssa1"
+# data "azurerm_resource_group" "deploymentRG" {
+#   name = "msafssa1"
+# }
+
+resource "azurerm_resource_group" "rg1" {
+  name     = "${var.prefix}-rg1"
+  location = var.location
+  tags = {
+    environment = "Dev/Test"
+    provisioner = "Terraform"
+  }
 }
 
-resource "azurerm_resource_group" "stateRG1" {
-  name     = "${var.prefix}_state_rg1"
-  location = var.location
+data "azurerm_virtual_network" "vnet" {
+  name = "vnet1"
+  resource_group_name = azurerm_resource_group.rg1.name
+}
+
+data "azurerm_subnet" "subnet" {
+  name                 = "default"
+  virtual_network_name = data.azurerm_virtual_network.vnet.name
+  resource_group_name = azurerm_resource_group.rg1.name
 }
 
 resource "azurerm_storage_account" "datasa" {
-  name                     = "${var.prefix}_sa1"
-  location                 = var.location
-  account_tier             = var.satier
-  account_kind             = "StorageV2"
-  account_replication_type = var.satype[0]
-  resource_group_name      = data.azurerm_resource_group.deploymentRG
-
+  name                      = "${var.storage_prefix}sa1"
+  location                  = var.location
+  account_tier              = var.satier
+  account_kind              = "StorageV2"
+  access_tier               = "Hot"
+  account_replication_type  = var.satype[0]
+  resource_group_name       = azurerm_resource_group.rg1.name
+  allow_blob_public_access  = false
+  enable_https_traffic_only = true
+  identity {
+    type = "SystemAssigned"
+  }
+  network_rules {
+    default_action = "Deny"
+    bypass         = ["AzureServices"]
+    virtual_network_subnet_ids = [
+      data.azurerm_subnet.subnet.id
+    ]
+    ip_rules = [var.clientaccessip]
+  }
   tags = {
     environment = "Dev/Test"
     provisioner = "Terraform"
@@ -41,4 +70,9 @@ resource "azurerm_storage_container" "datasa_c1" {
   name                  = "images"
   storage_account_name  = azurerm_storage_account.datasa.name
   container_access_type = "private"
+}
+
+resource "azurerm_storage_share" "datasa_s1" {
+  name                 = "myshare"
+  storage_account_name = azurerm_storage_account.datasa.name
 }
