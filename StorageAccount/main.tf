@@ -76,3 +76,16 @@ resource "azurerm_storage_share" "datasa_s1" {
   name                 = "myshare"
   storage_account_name = azurerm_storage_account.datasa.name
 }
+
+resource "azurerm_private_endpoint" "pe-endpoint" {
+  location            = var.location
+  resource_group_name = azurerm_resource_group.rg1.name
+  name                = "pe1"
+  subnet_id           = data.azurerm_subnet.subnet.id
+  private_service_connection {
+    name                           = azurerm_storage_account.datasa.name
+    private_connection_resource_id = azurerm_storage_account.datasa.id
+    subresource_names              = ["blob"]
+    is_manual_connection           = false
+  }
+}

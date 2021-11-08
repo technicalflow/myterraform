@@ -1,4 +1,4 @@
-output "PIP" {
+output "public_ip" {
   # value = azurerm_public_ip.msapip1.*.ip_address
   value = data.azurerm_public_ip.msapip1read.ip_address
 }
