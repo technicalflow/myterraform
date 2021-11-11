@@ -1,20 +1,27 @@
 # terraform
-
-provider "azurerm" {
-  features {
-
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~>2.80"
+    }
+    azuread = {
+      source  = "hashicorp/azuread"
+      version = "~>2.0"
+    }
   }
 }
 
-variable "kv_id" {
-  default = "/subscriptions/kv_id"
+provider "azurerm" {
+  features {
+  }
 }
 
-data "azurerm_key_vault_secret" "kv_secret" {
-  name         = "kvpassword"
-  key_vault_id = var.kv_id
+
+provider "azuread" {
 }
 
-output "KV_Secret_is" {
-  value = data.azurerm_key_vault_secret.kv_secret.value
+resource "azurerm_resource_group" "rg1" {
+  name     = "msafs-tf-rg1"
+  location = "France Central"
 }
