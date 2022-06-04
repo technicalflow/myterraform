@@ -19,17 +19,17 @@ resource "azurerm_key_vault" "kv1" {
     object_id = data.azurerm_client_config.current.object_id
 
     key_permissions = [
-      "create",
-      "get",
+      "Create",
+      "Get",
     ]
 
     secret_permissions = [
-      "set",
-      "get",
-      "list",
-      "delete",
-      "purge",
-      "recover"
+      "Set",
+      "Get",
+      "List",
+      "Delete",
+      "Purge",
+      "Recover"
     ]
   }
 }

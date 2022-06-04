@@ -2,7 +2,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~>2.80"
+      version = "~>3.0"
     }
   }
 }
@@ -16,24 +16,27 @@ provider "azurerm" {
 #   name = "msafssa1"
 # }
 
-resource "azurerm_resource_group" "rg1" {
-  name     = "${var.prefix}-rg1"
-  location = var.location
-  tags = {
-    environment = "Dev/Test"
-    provisioner = "Terraform"
-  }
+data "azurerm_resource_group" "rg1" {
+  name     = "${var.prefix}_rg1"
 }
+# resource "azurerm_resource_group" "rg1" {
+#   name     = "${var.prefix}_rg1"
+#   location = var.location
+#   tags = {
+#     environment = "Dev/Test"
+#     provisioner = "Terraform"
+#   }
+# }
 
 data "azurerm_virtual_network" "vnet" {
-  name = "vnet1"
-  resource_group_name = azurerm_resource_group.rg1.name
+  name                = "${var.prefix}_vnet1"
+  resource_group_name = data.azurerm_resource_group.rg1.name
 }
 
 data "azurerm_subnet" "subnet" {
-  name                 = "default"
+  name                 = "mysubnet"
   virtual_network_name = data.azurerm_virtual_network.vnet.name
-  resource_group_name = azurerm_resource_group.rg1.name
+  resource_group_name  = data.azurerm_resource_group.rg1.name
 }
 
 resource "azurerm_storage_account" "datasa" {
@@ -43,8 +46,7 @@ resource "azurerm_storage_account" "datasa" {
   account_kind              = "StorageV2"
   access_tier               = "Hot"
   account_replication_type  = var.satype[0]
-  resource_group_name       = azurerm_resource_group.rg1.name
-  allow_blob_public_access  = false
+  resource_group_name       = data.azurerm_resource_group.rg1.name
   enable_https_traffic_only = true
   identity {
     type = "SystemAssigned"
@@ -55,7 +57,7 @@ resource "azurerm_storage_account" "datasa" {
     virtual_network_subnet_ids = [
       data.azurerm_subnet.subnet.id
     ]
-    ip_rules = [var.clientaccessip]
+    ip_rules = var.clientaccessip
   }
   tags = {
     environment = "Dev/Test"
@@ -64,7 +66,6 @@ resource "azurerm_storage_account" "datasa" {
   lifecycle {
     prevent_destroy = true
   }
-
 }
 resource "azurerm_storage_container" "datasa_c1" {
   name                  = "images"
@@ -75,11 +76,12 @@ resource "azurerm_storage_container" "datasa_c1" {
 resource "azurerm_storage_share" "datasa_s1" {
   name                 = "myshare"
   storage_account_name = azurerm_storage_account.datasa.name
+  quota = 5120
 }
 
 resource "azurerm_private_endpoint" "pe-endpoint" {
   location            = var.location
-  resource_group_name = azurerm_resource_group.rg1.name
+  resource_group_name = data.azurerm_resource_group.rg1.name
   name                = "pe1"
   subnet_id           = data.azurerm_subnet.subnet.id
   private_service_connection {

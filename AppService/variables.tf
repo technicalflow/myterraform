@@ -13,7 +13,7 @@ variable "environment" {
 variable "location" {
   type        = string
   description = "Location to deploy the resoruce group"
-  default     = "West US 2"
+  default     = "France Central"
 }
 
 variable "dns_prefix" {

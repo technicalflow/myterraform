@@ -1,10 +1,10 @@
 # Variables
 variable "location" {
-  default = "eastus"
+  default = "francecentral"
 }
 
 variable "prefix" {
-  default = "msafs-tf1"
+  default = "msafs_tf"
 }
 variable "storage_prefix" {
   default = "msafstf1"

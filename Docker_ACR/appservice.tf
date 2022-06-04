@@ -1,27 +1,29 @@
 
-resource "azurerm_app_service_plan" "default" {
+resource "azurerm_service_plan" "defaultsp" {
   name                = "${var.name}-plan"
-  location            = azurerm_resource_group.default.location
   resource_group_name = azurerm_resource_group.default.name
-  kind                = "Linux"
-
-  # Reserved must be set to true for Linux App Service Plans
-  reserved = true
-
-  sku {
-    tier = var.plan_tier
-    size = var.plan_sku
-  }
+  location            = azurerm_resource_group.default.location
+  os_type             = "Linux"
+  sku_name            = "P1v2"
 }
 
-resource "azurerm_app_service" "default" {
+resource "azurerm_linux_web_app" "lwa" {
   name                = "${var.dns_prefix}-${var.name}-${var.environment}-app"
-  location            = azurerm_resource_group.default.location
+  location            = azurerm_service_plan.defaultsp.location
   resource_group_name = azurerm_resource_group.default.name
-  app_service_plan_id = azurerm_app_service_plan.default.id
-
+  service_plan_id     = azurerm_service_plan.defaultsp.id
   site_config {
-    always_on        = true
-    linux_fx_version = "DOCKER|nginxdemos/hello"
+    always_on = true
+    application_stack {
+      docker_image     = "nginxdemos/hello"
+      docker_image_tag = "latest"
+    }
   }
+  identity {
+    type = "SystemAssigned"
+  }
+}
+data "azurerm_service_plan" "spd" {
+  name = azurerm_service_plan.defaultsp.name
+  resource_group_name = azurerm_resource_group.default.name
 }

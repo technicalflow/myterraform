@@ -44,6 +44,6 @@ resource "azuread_service_principal_password" "sp1_pass" {
 }
 
 data "azuread_service_principal" "sp1data" {
-    display_name = azuread_service_principal.sp1.display_name
+    # display_name = azuread_service_principal.sp1.display_name
     object_id = azuread_service_principal.sp1.object_id
 }
