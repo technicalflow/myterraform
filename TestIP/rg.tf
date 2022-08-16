@@ -3,6 +3,15 @@ resource "random_integer" "priority" {
   max = 110
 }
 
+resource "random_password" "password" {
+  count            = var.admin_password == null && var.disable_password_authentication == false ? 1 : 0
+  length           = 16
+  min_numeric      = 3
+  special          = true
+  override_special = "\\"
+}
+
+
 locals {
   loc = var.location == "francecentral" ? "frc" : var.location == "northeurope" ? "neu" : var.location == "germanyestcentral" ? "gwc" : var.location == "eastus" ? "eus" : var.location
 }

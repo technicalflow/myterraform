@@ -21,7 +21,8 @@ variable "tags" {
     "env"        = "prod"
     "cost"       = "p1"
     "provisoner" = "tf"
-    "backup" = "no"
+    "backup"     = "no"
+    "project"    = "testip"
   }
 }
 
