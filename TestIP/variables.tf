@@ -1,7 +1,8 @@
 # Variables
 variable "image_name" {
-  type    = string
+  type        = string
   description = "Choose your system - ubuntu or oracle"
+  default     = "ubuntu"
 }
 
 variable "admin_username" {
@@ -32,6 +33,11 @@ variable "enable_public_ip_address" {
 variable "number_of_nics" {
   type    = number
   default = 1
+}
+
+variable "ipconfig_name" {
+  type    = string
+  default = "ipconfig1"
 }
 
 variable "ssh_ip" {
@@ -67,3 +73,40 @@ variable "image_list" {
     },
   }
 }
+
+variable "redundancy" {
+  type    = list(any)
+  default = ["LRS", "ZRS", "GRS"]
+}
+
+variable "disk_type" {
+  type = map(string)
+  default = {
+    Standard_HDD = "Standard"
+    Premium_SSD  = "Premium"
+    Standard_SSD = "StandardSSD"
+  }
+}
+
+variable "disk_caching" {
+  type    = string
+  default = "ReadWrite"
+}
+
+# variable "security_rules" {
+#   type = map(object({
+#     name     = string
+#     priority = number
+#     protocol = string
+#     port     = number
+#   }))
+
+#   default = {
+#     web = {
+#       name     = "Web"
+#       priority = 1002
+#       protocol = "Tcp"
+#       port     = 80
+#     }
+#   }
+# }

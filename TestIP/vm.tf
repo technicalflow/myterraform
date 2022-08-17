@@ -7,7 +7,7 @@ resource "azurerm_network_interface" "nic" {
   tags                          = var.tags
 
   ip_configuration {
-    name                          = "ipconfig1"
+    name                          = var.ipconfig_name
     subnet_id                     = azurerm_subnet.vnetsubnet.id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.pip[0].id
@@ -42,8 +42,8 @@ resource "azurerm_linux_virtual_machine" "vm" {
   }
 
   os_disk {
-    caching              = "ReadWrite"
-    storage_account_type = "StandardSSD_LRS"
+    caching              = var.disk_caching
+    storage_account_type = "${var.disk_type["Standard_SSD"]}_${var.redundancy[0]}"
     disk_size_gb         = 30
     name                 = "${var.prefix}_${local.loc}_${var.provisioner}_vm_osdisk${random_integer.priority.result}"
   }
@@ -60,6 +60,13 @@ resource "azurerm_linux_virtual_machine" "vm" {
 
   depends_on = [
     azurerm_public_ip.pip,
-    azurerm_virtual_network.vnet
+    azurerm_virtual_network.vnet,
+    azurerm_network_security_group.nicnsg
   ]
+  lifecycle {
+    prevent_destroy = true
+    ignore_changes = [
+      custom_data
+    ]
+  }
 }

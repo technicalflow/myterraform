@@ -4,32 +4,45 @@ resource "azurerm_network_security_group" "subnetnsg" {
   location            = azurerm_resource_group.rg.location
 
   security_rule {
-    name                       = "SSH"
-    priority                   = 1001
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "22"
-    source_address_prefix      = "${var.ssh_ip}/32"
-    destination_address_prefix = "*"
+    name                                       = "SSH"
+    priority                                   = 1001
+    direction                                  = "Inbound"
+    access                                     = "Allow"
+    protocol                                   = "Tcp"
+    source_port_range                          = "*"
+    destination_port_range                     = "22"
+    destination_application_security_group_ids = [azurerm_application_security_group.asg.id]
+    source_address_prefix                      = "${var.ssh_ip}/32"
   }
+
   security_rule {
-    name                       = "Web"
-    priority                   = 1002
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "80"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
+    name                                       = "Web"
+    priority                                   = 1002
+    direction                                  = "Inbound"
+    access                                     = "Allow"
+    protocol                                   = "Tcp"
+    source_port_range                          = "*"
+    destination_port_range                     = "80"
+    source_address_prefix                      = "*"
+    destination_application_security_group_ids = [azurerm_application_security_group.asg.id]
+  }
+
+  security_rule {
+    name                                       = "Ping"
+    priority                                   = 1003
+    direction                                  = "Inbound"
+    access                                     = "Allow"
+    protocol                                   = "Icmp"
+    source_port_range                          = "*"
+    destination_port_range                     = "*"
+    source_address_prefix                      = "*"
+    destination_application_security_group_ids = [azurerm_application_security_group.asg.id]
   }
 
   tags = var.tags
 }
 
-resource "azurerm_subnet_network_security_group_association" "example" {
+resource "azurerm_subnet_network_security_group_association" "subnet_nsg_connect" {
   subnet_id                 = azurerm_subnet.vnetsubnet.id
   network_security_group_id = azurerm_network_security_group.subnetnsg.id
 }
