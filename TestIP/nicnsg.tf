@@ -7,15 +7,15 @@ locals {
     asg      = azurerm_application_security_group.asg.id
     # },
     # {
-    #     name     = "Web"
-    #     priority = 1002
+    #     name     = "SSH"
+    #     priority = 1001
     #     protocol = "Tcp"
     #     port     = 80
     # },
     # {
-    #     name     = "Web"
-    #     priority = 1002
-    #     protocol = "Tcp"
+    #     name     = "Ping"
+    #     priority = 1003
+    #     protocol = "Icmp"
     #     port     = 80
   }]
 }

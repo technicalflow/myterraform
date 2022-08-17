@@ -64,7 +64,6 @@ resource "azurerm_linux_virtual_machine" "vm" {
     azurerm_network_security_group.nicnsg
   ]
   lifecycle {
-    prevent_destroy = true
     ignore_changes = [
       custom_data
     ]
