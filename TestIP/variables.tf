@@ -93,6 +93,10 @@ variable "disk_caching" {
   default = "ReadWrite"
 }
 
+variable "ssh_key" {
+  type    = string
+}
+
 # variable "security_rules" {
 #   type = map(object({
 #     name     = string
