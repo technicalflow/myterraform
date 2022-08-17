@@ -61,7 +61,8 @@ resource "azurerm_linux_virtual_machine" "vm" {
   depends_on = [
     azurerm_public_ip.pip,
     azurerm_virtual_network.vnet,
-    azurerm_network_security_group.nicnsg
+    azurerm_network_security_group.nicnsg,
+    azurerm_network_interface_security_group_association.nic_nsg
   ]
   lifecycle {
     ignore_changes = [

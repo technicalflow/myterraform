@@ -12,7 +12,7 @@
     - [dnf, update -y]
     - [dnf, install -y podman]
     - [echo, net.ipv4.ip_unprivileged_port_start=80 >> /etc/sysctl.conf]
-
-# firewall-cmd --permanent --zone=public --add-service=http && firewall-cmd --reload
-# yum install epel-release -y
-# sudo dnf remove -y cockpit*
+    - firewall-cmd --permanent --zone=public --add-service=http && firewall-cmd --reload
+    - dnf install epel-release -y
+    - dnf remove -y cockpit*
+    - [reboot]

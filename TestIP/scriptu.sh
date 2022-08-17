@@ -15,9 +15,9 @@
     - [ufw, allow, http]
     - [ufw, allow, https]
     - [sh, -c, "yes y | ufw enable"]
-    - [reboot]
     - [touch, /tmp/one]
     - docker run --name ipcheck -p 80:80 -d --restart=unless-stopped -m 128m --memory-swap 128m -e TZ=Europe/Warsaw techfellow/ipcheck:latest
+    - [reboot]
 
   # scripts-user:
   # #!/bin/bash
