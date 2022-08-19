@@ -5,12 +5,13 @@ locals {
     protocol = "Tcp"
     port     = 80
     asg      = azurerm_application_security_group.asg.id
-    # },
-    # {
-    #     name     = "SSH"
-    #     priority = 1001
-    #     protocol = "Tcp"
-    #     port     = 80
+    },
+    {
+    name     = "Https"
+    priority = 1004
+    protocol = "Tcp"
+    port     = 443
+    asg      = azurerm_application_security_group.asg.id
     # },
     # {
     #     name     = "Ping"
