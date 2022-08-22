@@ -1,0 +1,32 @@
+# terraform {
+#   required_providers {
+#     docker = {
+#       source = "kreuzwerker/docker"
+#       version = "2.20.2"
+#     }
+#   }
+# }
+
+
+data "docker_image" "nginx" {
+  name = "nginx:1.17.6"
+  depends_on = [
+    azurerm_public_ip.pip,
+    azurerm_linux_virtual_machine.vm
+  ]
+}
+
+resource "docker_container" "foo" {
+  image = data.docker_image.nginx
+  name  = "foo"
+  
+  depends_on = [
+    azurerm_public_ip.pip,
+    azurerm_linux_virtual_machine.vm
+  ]
+}
+
+provider "docker" {
+  host     = "ssh://${var.admin_username}@${data.azurerm_public_ip.pipread.ip_address}:22"
+  ssh_opts = ["-i", "${var.ssh_key}", "-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
+}

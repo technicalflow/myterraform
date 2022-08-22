@@ -11,7 +11,7 @@ resource "null_resource" "example2" {
     command = "echo IP2 = >> terraform1.tfvars"
   }
   provisioner "local-exec" {
-    command     = "curl icanhazip.com >> terraform1.tfvars"
+    command = "curl icanhazip.com >> terraform1.tfvars"
     # interpreter = ["pwsh", "-Command"]
   }
   # provisioner "local-exec" {

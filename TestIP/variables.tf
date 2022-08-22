@@ -6,8 +6,7 @@ variable "image_name" {
 }
 
 variable "admin_username" {
-  type    = string
-  default = "azuremadmin"
+  type = string
 }
 
 variable "vm_size" {
@@ -41,8 +40,7 @@ variable "ipconfig_name" {
 }
 
 variable "ssh_ip" {
-  type    = string
-  default = "46.187.244.193"
+  type = string
 }
 
 variable "subnet_name" {
@@ -94,7 +92,7 @@ variable "disk_caching" {
 }
 
 variable "ssh_key" {
-  type    = string
+  type = string
 }
 
 # variable "security_rules" {

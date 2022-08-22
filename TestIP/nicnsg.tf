@@ -7,17 +7,17 @@ locals {
     asg      = azurerm_application_security_group.asg.id
     },
     {
-    name     = "Https"
-    priority = 1004
-    protocol = "Tcp"
-    port     = 443
-    asg      = azurerm_application_security_group.asg.id
-    # },
-    # {
-    #     name     = "Ping"
-    #     priority = 1003
-    #     protocol = "Icmp"
-    #     port     = 80
+      name     = "Https"
+      priority = 1004
+      protocol = "Tcp"
+      port     = 443
+      asg      = azurerm_application_security_group.asg.id
+      # },
+      # {
+      #     name     = "Ping"
+      #     priority = 1003
+      #     protocol = "Icmp"
+      #     port     = 80
   }]
 }
 
