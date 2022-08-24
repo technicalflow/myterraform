@@ -10,8 +10,7 @@ provider "null" {
   
 }
 
-
-provider "local_file" {
+provider "local" {
 
 }
 
