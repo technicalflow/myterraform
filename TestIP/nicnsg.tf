@@ -35,7 +35,7 @@ resource "azurerm_network_security_group" "nicnsg" {
     source_port_range                          = "*"
     destination_port_range                     = "22"
     destination_application_security_group_ids = [azurerm_application_security_group.asg.id]
-    source_address_prefix                      = "${var.ssh_ip}/32"
+    source_address_prefix                      = var.ssh_ip != null ? "${var.ssh_ip}/32" : "*"
   }
 
   security_rule {

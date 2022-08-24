@@ -7,19 +7,35 @@
 # }
 
 resource "null_resource" "example2" {
-  provisioner "local-exec" {
-    command = "echo IP2 = >> terraform1.tfvars"
-  }
+  # provisioner "local-exec" {
+  #   command = "echo IP2 = >> terraform1.tfvars"
+  # }
   provisioner "local-exec" {
     command = "curl icanhazip.com >> terraform1.tfvars"
     # interpreter = ["pwsh", "-Command"]
   }
-  # provisioner "local-exec" {
-  #   command = "echo 'IP2 ='; cat terraform1.tfvars > terraform1.tfvars"
-  # }
+
+  provisioner "local-exec" {
+    command = "export SSH_IP=$(curl -s icanhazip.com)"
+  }
   # provisioner "local-exec" {
   #   command = "sed -i '1i IP2=' terraform.tfvars"
   # }
+}
+
+provider "local_file" {
+}
+
+data "local_file" "file" {
+  filename = "terraform1.tfvars"
+
+  depends_on = [
+    null_resource.example2
+  ]
+}
+
+output "file" {
+  value = data.local_file.file.content
 }
 
 resource "null_resource" "example3" {

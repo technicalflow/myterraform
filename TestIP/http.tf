@@ -1,13 +1,13 @@
 provider "http" {
-  
+
 }
 
 provider "tls" {
-  
+
 }
 
 provider "null" {
-  
+
 }
 
 provider "local" {
@@ -34,7 +34,7 @@ resource "tls_private_key" "privatekey" {
 }
 
 resource "local_file" "name" {
-  content = tls_private_key.privatekey.private_key_openssh
+  content  = tls_private_key.privatekey.private_key_openssh
   filename = "sshkey"
 }
 
