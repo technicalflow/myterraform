@@ -58,7 +58,7 @@ resource "azurerm_network_security_group" "nicnsg" {
       priority                                   = sg.value.priority
       direction                                  = "Inbound"
       access                                     = "Allow"
-      protocol                                   = sg.value.protocol
+      protocol                                   = lookup(sg.value, "protocol", "Tcp")
       source_port_range                          = "*"
       destination_port_range                     = sg.value.port
       source_address_prefix                      = "*"
