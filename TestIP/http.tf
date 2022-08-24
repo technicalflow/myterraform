@@ -10,6 +10,11 @@ provider "null" {
   
 }
 
+
+provider "local_file" {
+
+}
+
 data "http" "ipcheck" {
   url = "http://testip.fun"
   depends_on = [
@@ -29,15 +34,20 @@ resource "tls_private_key" "privatekey" {
   rsa_bits  = 4096
 }
 
-output "privatekeyoutput" {
-  sensitive = true
-  value = tls_private_key.privatekey.private_key_openssh
+resource "local_file" "name" {
+  content = tls_private_key.privatekey.private_key_openssh
+  filename = "sshkey"
 }
 
-output "publickeyoutput" {
-  sensitive = true
-  value = tls_private_key.privatekey.public_key_openssh
-}
+# output "privatekeyoutput" {
+#   sensitive = true
+#   value = tls_private_key.privatekey.private_key_openssh
+# }
+
+# output "publickeyoutput" {
+#   sensitive = true
+#   value = tls_private_key.privatekey.public_key_openssh
+# }
 
 output "ipcheck_http" {
   value = data.http.ipcheck.status_code
