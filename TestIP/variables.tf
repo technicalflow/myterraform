@@ -40,7 +40,7 @@ variable "ipconfig_name" {
 }
 
 variable "ssh_ip" {
-  type = string
+  type    = string
   default = null
 }
 
@@ -93,7 +93,7 @@ variable "disk_caching" {
 }
 
 variable "ssh_key" {
-  type = string
+  type    = string
   default = null
 }
 
