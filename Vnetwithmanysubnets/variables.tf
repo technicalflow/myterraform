@@ -4,7 +4,7 @@ variable "common_tags" {
   type = map(string)
   default = {
     Terraform   = "True"
-    Description = "This is a demo built with Terraform"
+    Description = "Terraform"
   }
   description = "Optional Input - A map of key value pairs that is used to tag resources created. (Default: demo map)"
 }
@@ -76,12 +76,12 @@ variable "subnet_config" {
       mask      = 26
       cidr_base = "10.1.0.128"
     }
-    Prod = {
+    Dmz = {
       name      = "DMZ"
       mask      = 27
       cidr_base = "10.1.0.192"
     }
-    Dev = {
+    FW = {
       name      = "FW"
       mask      = 29
       cidr_base = "10.1.0.248"

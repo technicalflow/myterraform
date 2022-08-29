@@ -14,6 +14,30 @@ provider "local" {
 
 }
 
+
+resource "null_resource" "nr" {
+  provisioner "local-exec" {
+    command = "curl icanhazip.com >> terraform1.tfvars"
+    # interpreter = ["pwsh", "-Command"]
+  }
+
+  provisioner "local-exec" {
+    command = "export SSH_IP=$(curl -s icanhazip.com)"
+  }
+}
+
+data "local_file" "file" {
+  filename = "terraform1.tfvars"
+
+  depends_on = [
+    null_resource.nr
+  ]
+}
+
+output "file" {
+  value = data.local_file.file.content
+}
+
 data "http" "ipcheck" {
   url = "http://testip.fun"
   depends_on = [
@@ -23,7 +47,7 @@ data "http" "ipcheck" {
 
 # resource "null_resource" "httpcheck" {
 #     provisioner "local-exec" {
-#       command = contains([201, 204], data.http.ipcheck.status_code)
+#       command = contains([200, 204], data.http.ipcheck.status_code)
 
 #     }
 # }
