@@ -17,13 +17,13 @@ provider "local" {
 
 resource "null_resource" "nr" {
   provisioner "local-exec" {
-    command = "curl icanhazip.com >> terraform1.tfvars"
+    command = "curl icanhazip.com > terraform1.tfvars"
     # interpreter = ["pwsh", "-Command"]
   }
 
-  provisioner "local-exec" {
-    command = "export SSH_IP=$(curl -s icanhazip.com)"
-  }
+  # provisioner "local-exec" {
+  #   command = "export SSH_IP=$(curl -s icanhazip.com)"
+  # }
 }
 
 data "local_file" "file" {
@@ -39,7 +39,7 @@ output "file" {
 }
 
 data "http" "ipcheck" {
-  url = "http://testip.fun"
+  url = azurerm_public_ip.pip[0].ip_address
   depends_on = [
     azurerm_linux_virtual_machine.vm
   ]

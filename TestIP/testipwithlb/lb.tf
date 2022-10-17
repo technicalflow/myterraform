@@ -103,6 +103,10 @@ resource "azurerm_lb_nat_rule" "lbnatrule" {
   backend_port                   = 22
   frontend_port                  = 59001
   frontend_ip_configuration_name = "PublicIPAddress"
+  depends_on = [
+    azurerm_network_interface_backend_address_pool_association.nic2lb,
+    azurerm_network_interface_backend_address_pool_association.niclb
+  ]
 }
 
 resource "azurerm_network_interface_backend_address_pool_association" "niclb" {

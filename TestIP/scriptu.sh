@@ -33,3 +33,42 @@
   # scripts-user:
   # #!/bin/bash
   # echo 123 > /tmp/filetest
+
+# systemctl disable apt-daily.timer
+# systemctl disable apt-daily.service
+# systemctl disable apt-daily-upgrade.timer
+# systemctl disable apt-daily-upgrade.service
+# systemctl disable unattended-upgrades.service
+
+
+# ---
+# version: "3.3"
+
+# services:
+#   ipcheck100:
+# #    build: .
+#     image: techfellow/ipcheck:latest
+#     container_name: ipcheck100
+#     mem_limit: 128m
+#     ports:
+#       - "80:80"
+#     environment:
+#       TZ: 'Europe/Warsaw'
+
+#     restart: unless-stopped
+
+#   ipcheckhttps100:
+#     image: techfellow/ipcheck:httpsroot
+#     container_name: ipcheckhttps100
+#     environment:
+#       TZ: 'Europe/Warsaw'
+#     mem_limit: 128m
+#     ports:
+#       - 443:443
+
+#     volumes:
+#       - /opt:/opt:ro
+
+#     restart: unless-stopped
+
+
