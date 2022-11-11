@@ -9,9 +9,9 @@ data "azurerm_subscription" "sub" {}
 ### Network Manager
 resource "azapi_resource" "vnetnm" {
   type      = "Microsoft.Network/networkManagers@2022-05-01"
-  parent_id = azurerm_resource_group.rg200[0].id
+  parent_id = azurerm_resource_group.rg300.id
   name      = "nm100"
-  location  = azurerm_resource_group.rg200[0].location
+  location  = azurerm_resource_group.rg300.location
   body = jsonencode({
     properties = {
       networkManagerScopeAccesses = ["Connectivity", "SecurityAdmin"]

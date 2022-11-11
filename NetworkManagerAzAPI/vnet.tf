@@ -11,6 +11,11 @@ variable "addresses" {
   default = ["10.1.0.0/16", "10.2.0.0/16", "10.3.0.0/16"]
 }
 
+variable "vnetname" {
+  type    = list(any)
+  default = ["hub", "spoke1", "spoke2"]
+}
+
 variable "tags" {
   type = map(any)
   default = {
@@ -19,27 +24,22 @@ variable "tags" {
     "ng"          = "true"
   }
 }
-resource "azurerm_resource_group" "rg200" {
-  for_each = local.location
-  name     = "rg200${local.location[each.key]}${random_string.resource_code[each.key].result}"
-  location = each.value
+
+resource "azurerm_resource_group" "rg300" {
+  location = local.location[0]
+  name = "rg300"
+  
 }
 
-resource "random_string" "resource_code" {
-  length  = 3
-  special = false
-  upper   = false
-  count   = length(local.location)
-}
 
 resource "azurerm_virtual_network" "vnet" {
   for_each            = local.location
-  name                = "vnet${local.location[each.key]}${random_string.resource_code[each.key].result}"
+  name                = "${var.vnetname[each.key]}_vnet_${local.location[each.key]}"
   address_space       = [var.addresses[each.key]]
-  resource_group_name = azurerm_resource_group.rg200[each.key].name
+  resource_group_name = azurerm_resource_group.rg300.name
   location            = each.value
   subnet {
-    address_prefix = cidrsubnet(var.addresses[each.key], 8, 4)
+    address_prefix = cidrsubnet(var.addresses[each.key], 8, 1)
     name           = "subnet1"
   }
   tags = var.tags
