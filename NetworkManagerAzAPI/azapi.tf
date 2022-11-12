@@ -212,7 +212,7 @@ resource "azapi_resource" "securityrule" {
 ### Deployment using powershell
 resource "null_resource" "initmodule" {
   provisioner "local-exec" {
-    command     = "Install-module az && Install-Module -Name Az.Network -RequiredVersion 4.15.1-preview -AllowPrerelease"
+    command     = "Install-module az -force && Install-Module -Name Az.Network -RequiredVersion 4.15.1-preview -AllowPrerelease -force"
     interpreter = ["pwsh", "-Command"]
     on_failure  = fail
   }
