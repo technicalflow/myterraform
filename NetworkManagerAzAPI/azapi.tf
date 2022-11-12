@@ -1,8 +1,3 @@
-
-# resource "azapi_resource_action" "name" {
-#   type = "Microsoft.Network/networkManagers/networkGroups/staticMembers@2022-05-01"
-# }
-
 data "azurerm_client_config" "current" {}
 data "azurerm_subscription" "sub" {}
 
@@ -154,11 +149,18 @@ resource "azapi_resource" "securityrule" {
 }
 
 ### Deployment using powershell
+resource "null_resource" "initmodule" {
+  provisioner "local-exec" {
+    command     = "Install-module az && Install-Module -Name Az.Network -RequiredVersion 4.15.1-preview -AllowPrerelease"
+    interpreter = ["pwsh", "-Command"]
+    on_failure  = fail
+  }
+}
+
 resource "null_resource" "pwshdeployconnectivity" {
   depends_on = [azapi_resource.avnmconnectivity]
   provisioner "local-exec" {
-    command = "Deploy-AzNetworkManagerCommit -Name ${azapi_resource.vnetnm.name} -ResourceGroupName ${azurerm_resource_group.rg300.name} -ConfigurationId ${azapi_resource.avnmconnectivity.id} -TargetLocation ${azurerm_resource_group.rg300.location} -CommitType 'Connectivity'"
-    # command     = "Invoke-AzRestMethod -Method PUT -Path \"/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resource_group_name}/providers/Microsoft.Compute/virtualMachines/${var.vm_name}/providers/Microsoft.Security/serverVulnerabilityAssessments/default?api-Version=2015-06-01-preview\""
+    command     = "Deploy-AzNetworkManagerCommit -Name ${azapi_resource.vnetnm.name} -ResourceGroupName ${azurerm_resource_group.rg300.name} -ConfigurationId ${azapi_resource.avnmconnectivity.id} -TargetLocation ${azurerm_resource_group.rg300.location} -CommitType 'Connectivity'"
     interpreter = ["pwsh", "-Command"]
     on_failure  = fail
   }
@@ -167,8 +169,7 @@ resource "null_resource" "pwshdeployconnectivity" {
 resource "null_resource" "pwshdeploysecurity" {
   depends_on = [azapi_resource.secrulecollection]
   provisioner "local-exec" {
-    command = "Deploy-AzNetworkManagerCommit -Name ${azapi_resource.vnetnm.name} -ResourceGroupName ${azurerm_resource_group.rg300.name} -ConfigurationId ${azapi_resource.avnmsc.id} -TargetLocation ${azurerm_resource_group.rg300.location} -CommitType 'Securityadmin'"
-    # command     = "Invoke-AzRestMethod -Method PUT -Path \"/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resource_group_name}/providers/Microsoft.Compute/virtualMachines/${var.vm_name}/providers/Microsoft.Security/serverVulnerabilityAssessments/default?api-Version=2015-06-01-preview\""
+    command     = "Deploy-AzNetworkManagerCommit -Name ${azapi_resource.vnetnm.name} -ResourceGroupName ${azurerm_resource_group.rg300.name} -ConfigurationId ${azapi_resource.avnmsc.id} -TargetLocation ${azurerm_resource_group.rg300.location} -CommitType 'Securityadmin'"
     interpreter = ["pwsh", "-Command"]
     on_failure  = fail
   }
@@ -216,4 +217,8 @@ resource "null_resource" "pwshdeploysecurity" {
 #         tenantId = ""
 #     }
 #   })
+# }
+
+# resource "azapi_resource_action" "name" {
+#   type = "Microsoft.Network/networkManagers/networkGroups/staticMembers@2022-05-01"
 # }
