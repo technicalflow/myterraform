@@ -148,6 +148,67 @@ resource "azapi_resource" "securityrule" {
   })
 }
 
+### Not yet implemented - User Security Configuration
+# resource "azapi_resource" "usersecconfig" {
+#   name      = "usersecconfig"
+#   parent_id = azapi_resource.vnetnm.id
+#   type      = "Microsoft.Network/networkManagers/securityUserConfigurations@2022-04-01-preview"
+#   body = jsonencode({
+#     properties = {
+#       deleteExistingNSGs = "True"
+#       description        = "Security User Config"
+#     }
+#   })
+# }
+
+# resource "azapi_resource" "userrulecollection" {
+#   name      = "userrulecollection"
+#   parent_id = azapi_resource.usersecconfig.id
+#   type      = "Microsoft.Network/networkManagers/securityUserConfigurations/ruleCollections@2022-04-01-preview"
+#   body = jsonencode({
+#     properties = {
+#       appliesToGroups = [
+#         {
+#           networkGroupId = azapi_resource.vnetnmng.id
+#         }
+#       ]
+#       description = "User Security Rule Collection"
+#     }
+#   })
+# }
+
+# resource "azapi_resource" "usersecrule" {
+#   name      = "usersecrule"
+#   parent_id = azapi_resource.userrulecollection.id
+#   type      = "Microsoft.Network/networkManagers/securityUserConfigurations/ruleCollections/rules@2022-04-01-preview"
+#   body = jsonencode({
+#     name = "SSH_USER_Access" // not required by Azure but terraform needs it
+#     kind = "Custom"          // Custom or default
+#     properties = {
+#       // No Access no Priority compared to Security Admin Rules
+#       description           = "User Allow SSH"
+#       destinationPortRanges = ["22"]
+#       destinations = [
+#         {
+#           addressPrefix     = "*"        // Destination address with Inbound connection does not need to be specified
+#           addressPrefixType = "IPPrefix" // Choose IPPrefix or ServiceTag
+#         }
+#       ]
+#       direction = "Inbound" //Inbound or Outbound
+#       protocol  = "Tcp"     //Accepted 'Ah' 'Any' 'Esp' 'Icmp' 'Tcp' 'Udp'      
+#       sourcePortRanges = [
+#         "0-65535" // to allow all
+#       ]
+#       sources = [
+#         {
+#           addressPrefix     = "*"
+#           addressPrefixType = "IPPrefix" // Choose IPPrefix or ServiceTag
+#         }
+#       ]
+#     }
+#   })
+# }
+
 ### Deployment using powershell
 resource "null_resource" "initmodule" {
   provisioner "local-exec" {
