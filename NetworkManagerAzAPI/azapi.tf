@@ -121,36 +121,57 @@ resource "azapi_resource" "secrulecollection" {
 }
 
 resource "azapi_resource" "securityrule" {
-  type = "Microsoft.Network/networkManagers/securityAdminConfigurations/ruleCollections/rules@2022-05-01"
-  name = "SSH_Access"
+  type      = "Microsoft.Network/networkManagers/securityAdminConfigurations/ruleCollections/rules@2022-05-01"
+  name      = "SSH_Access"
   parent_id = azapi_resource.secrulecollection.id
   body = jsonencode({
     name = "SSH_Access" // not required by Azure but terraform needs it
-    kind = "Custom" // Custom or default
+    kind = "Custom"     // Custom or default
     properties = {
-      access = "Allow" // In Azure called action - Allow, AlwaysAllow, Deny
-      description = "Allow SSH"
+      access                = "Allow" // In Azure called action - Allow, AlwaysAllow, Deny
+      description           = "Allow SSH"
       destinationPortRanges = ["22"]
       destinations = [
         {
-          addressPrefix = "*" // Destination address with Inbound connection does not need to be specified
+          addressPrefix     = "*"        // Destination address with Inbound connection does not need to be specified
           addressPrefixType = "IPPrefix" // Choose IPPrefix or ServiceTag
         }
       ]
       direction = "Inbound" //Inbound or Outbound
-      priority = 1001
-      protocol = "Tcp"
+      priority  = 1001
+      protocol  = "Tcp"
       sourcePortRanges = [
         "0-65535" // to allow all
       ]
       sources = [
         {
-          addressPrefix = "*"
+          addressPrefix     = "*"
           addressPrefixType = "IPPrefix" // Choose IPPrefix or ServiceTag
         }
       ]
-  }
+    }
   })
+}
+
+### Deployment using powershell
+resource "null_resource" "pwshdeployconnectivity" {
+  depends_on = [azapi_resource.avnmconnectivity]
+  provisioner "local-exec" {
+    command = "Deploy-AzNetworkManagerCommit -Name ${azapi_resource.vnetnm.name} -ResourceGroupName ${azurerm_resource_group.rg300.name} -ConfigurationId ${azapi_resource.avnmconnectivity.id} -TargetLocation ${azurerm_resource_group.rg300.location} -CommitType 'Connectivity'"
+    # command     = "Invoke-AzRestMethod -Method PUT -Path \"/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resource_group_name}/providers/Microsoft.Compute/virtualMachines/${var.vm_name}/providers/Microsoft.Security/serverVulnerabilityAssessments/default?api-Version=2015-06-01-preview\""
+    interpreter = ["pwsh", "-Command"]
+    on_failure  = fail
+  }
+}
+
+resource "null_resource" "pwshdeploysecurity" {
+  depends_on = [azapi_resource.secrulecollection]
+  provisioner "local-exec" {
+    command = "Deploy-AzNetworkManagerCommit -Name ${azapi_resource.vnetnm.name} -ResourceGroupName ${azurerm_resource_group.rg300.name} -ConfigurationId ${azapi_resource.avnmsc.id} -TargetLocation ${azurerm_resource_group.rg300.location} -CommitType 'Securityadmin'"
+    # command     = "Invoke-AzRestMethod -Method PUT -Path \"/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resource_group_name}/providers/Microsoft.Compute/virtualMachines/${var.vm_name}/providers/Microsoft.Security/serverVulnerabilityAssessments/default?api-Version=2015-06-01-preview\""
+    interpreter = ["pwsh", "-Command"]
+    on_failure  = fail
+  }
 }
 
 
@@ -167,7 +188,7 @@ resource "azapi_resource" "securityrule" {
 #       direction = "Inbound"
 #       priority = 1002
 #       protocol = "Tcp"
-      
+
 #     }
 #   })
 # }

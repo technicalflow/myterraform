@@ -27,8 +27,8 @@ variable "tags" {
 
 resource "azurerm_resource_group" "rg300" {
   location = local.location[0]
-  name = "rg300"
-  
+  name     = "rg300"
+
 }
 
 
