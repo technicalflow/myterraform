@@ -7,7 +7,7 @@ resource "azurerm_public_ip" "msapip1" {
   sku                 = "Basic"
   sku_tier            = "Regional"
   domain_name_label   = var.dnsname
-  ip_version          = "IPv6"
+  ip_version          = "IPv4"
 
   tags = {
     environment = "Dev/Test"
@@ -120,6 +120,10 @@ resource "azurerm_linux_virtual_machine" "vm2" {
   admin_password                  = random_password.password.result
   computer_name                   = "ubuntu"
   disable_password_authentication = false
+  admin_ssh_key {
+    public_key = file("~/.ssh/ansible.pub")
+    username = "vmadmin"
+  }
 
   os_disk {
     name                 = "ubuntuOsDisk${random_id.randomId.hex}"
@@ -146,4 +150,7 @@ resource "azurerm_linux_virtual_machine" "vm2" {
 
 output "publicip" {
   value = azurerm_linux_virtual_machine.vm2.public_ip_address
+}
+output "dns" {
+  value = azurerm_public_ip.msapip1.fqdn
 }
