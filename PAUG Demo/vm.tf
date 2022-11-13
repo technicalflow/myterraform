@@ -5,7 +5,10 @@ resource "azurerm_public_ip" "msapip1" {
   resource_group_name = azurerm_resource_group.rg300.name
   allocation_method   = "Dynamic"
   sku                 = "Basic"
+  sku_tier            = "Regional"
   domain_name_label   = var.dnsname
+  ip_version          = "IPv6"
+
   tags = {
     environment = "Dev/Test"
     provisioner = "Terraform"
@@ -99,11 +102,11 @@ resource "random_id" "randomId" {
 }
 
 resource "random_password" "password" {
-  length = 16
+  length  = 16
   numeric = true
   special = true
-  upper = true
-  lower = true
+  upper   = true
+  lower   = true
 }
 
 # Create virtual machine

@@ -23,6 +23,6 @@ provider "azapi" {
 }
 
 
-provider "null" {
+provider "random" {
 
 }
