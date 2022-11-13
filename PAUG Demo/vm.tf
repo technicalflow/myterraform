@@ -98,6 +98,14 @@ resource "random_id" "randomId" {
   byte_length = 4
 }
 
+resource "random_password" "password" {
+  length = 16
+  numeric = true
+  special = true
+  upper = true
+  lower = true
+}
+
 # Create virtual machine
 resource "azurerm_linux_virtual_machine" "vm2" {
   name                            = "${var.prefix}_ubuntu"
@@ -106,7 +114,7 @@ resource "azurerm_linux_virtual_machine" "vm2" {
   network_interface_ids           = [azurerm_network_interface.nic.id]
   size                            = var.vmsize
   admin_username                  = "vmadmin"
-  admin_password                  = "cji9228iidbxckjabcPIJO"
+  admin_password                  = random_password.password.result
   computer_name                   = "ubuntu"
   disable_password_authentication = false
 
