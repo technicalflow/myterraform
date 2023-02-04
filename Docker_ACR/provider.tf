@@ -21,7 +21,7 @@ resource "random_string" "rgname" {
   special = false
   upper   = false
   lower   = false
-  number  = true
+  numeric  = true
 }
 resource "azurerm_resource_group" "default" {
   name     = "${var.name}-${var.environment}-rg${random_string.rgname.id}"

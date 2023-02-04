@@ -1,7 +1,7 @@
 variable "name" {
   type        = string
   description = "Location of the azure resource group."
-  default     = "msafs-tf"
+  default     = "msa-plc-tf"
 }
 
 variable "environment" {

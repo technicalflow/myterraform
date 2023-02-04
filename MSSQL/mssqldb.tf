@@ -102,13 +102,14 @@ resource "azurerm_mssql_database" "mssqldb" {
 #   }
 # }
 
-# resource "azurerm_mssql_database_extended_auditing_policy" "name" {
-#   database_id = "value"
-#   log_monitoring_enabled = 
-#   storage_account_access_key = 
-#   storage_account_access_key_is_secondary = 
-#   retention_in_days = azurerm_mssql_database.this
-#   storage_endpoint = 
-#   enabled = 
-# }
 
+resource "azurerm_mssql_database_extended_auditing_policy" "primary" {
+  count                                   = var.enable_database_extended_auditing_policy ? 1 : 0
+  database_id                             = azurerm_sql_database.db.id
+  storage_endpoint                        = azurerm_storage_account.storeacc.0.primary_blob_endpoint
+  storage_account_access_key              = azurerm_storage_account.storeacc.0.primary_access_key
+  storage_account_access_key_is_secondary = false
+  retention_in_days                       = var.log_retention_days
+  log_monitoring_enabled                  = var.enable_log_monitoring == true && var.log_analytics_workspace_id != null ? true : null
+  enabled = true
+}
