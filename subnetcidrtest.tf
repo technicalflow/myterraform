@@ -19,7 +19,6 @@ resource "azurerm_subnet" "subnets" {
   # }
 }
 
-
 location_short = "neu"
 
 address_spaces = {
