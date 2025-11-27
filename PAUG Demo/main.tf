@@ -27,6 +27,6 @@ provider "random" {
 }
 
 resource "azurerm_resource_group" "rg300" {
-  location = local.location[0]
+  location = var.location
   name     = "MEETUPDEMO1"
 }
