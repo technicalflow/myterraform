@@ -24,5 +24,9 @@ provider "azapi" {
 
 
 provider "random" {
+}
 
+resource "azurerm_resource_group" "rg300" {
+  location = local.location[0]
+  name     = "MEETUPDEMO1"
 }
